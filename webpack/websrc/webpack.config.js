@@ -2,12 +2,12 @@
 //插件
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+var port = 8080,
+    entryPrefix = 'webpack-dev-server/client?http://localhost:' + port;
 
 //
 var WebpackDevServer = require('webpack-dev-server');
 var path = require('path');
-var fs = require('fs');
-var Q = require('q');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var deepcopy = require('deepcopy');
 
@@ -56,18 +56,6 @@ var webpackOption = {
     ]
   },
   plugins: [
-    // new HtmlWebpackPlugin(
-    //   {
-    //     filename: '../dist/business/index.html',
-    //     template: './common/template.html',
-    //     inject: true,
-    //     hash: true,
-    //     minify: {
-    //       removeComments: false,
-    //       collapseWhitespace: false
-    //     }
-    //   }
-    // )
     // new webpack.optimize.UglifyJsPlugin({
     //   compress:{
     //     warnings: false
@@ -93,6 +81,7 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   var htmlFilename = '';
   for(var key in item){
     htmlFilename = key;
+    // entryOption[key] = entryPrefix + entryOption[key];
   }
   var HtmlWebpackPluginOptin = {
       filename: '../dist/business/' + htmlFilename + '.html',
@@ -108,13 +97,12 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   var wbp = deepcopy(webpackOption);
   // var wbp = util._extend({}, webpackOption);
   wbp.entry = entryOption;
-  // console.log('HtmlWebpackPluginOptin', HtmlWebpackPluginOptin);
   wbp.plugins.push(new HtmlWebpackPlugin(HtmlWebpackPluginOptin));
-  // console.log('wbp', wbp);
+
 
   webpackOptions.push(wbp);
 }
-console.log(webpackOptions);
+// console.log(webpackOptions);
 
 
 
