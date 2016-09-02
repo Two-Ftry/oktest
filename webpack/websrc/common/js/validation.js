@@ -1,6 +1,7 @@
 /*
  * @desc 验证方法
  */
+ import $ from 'jQuery';
 
 // (function($){
   var validation = {

@@ -62,19 +62,19 @@
 	var _class = {
 	  username: 'ev-username',
 	  pwd: 'ev-pwd',
+	  pwdConfirm: 'ev-pwd-confirm',
 	  checkCode: 'ev-check-code'
 	};
 
 	function init() {
-	  var dom = __webpack_require__(17);
-	  (0, _jQuery2.default)('#main').replaceWith(dom);
 	  initEvent();
 	}
 
 	function initEvent() {
-	  (0, _jQuery2.default)('.ev-login-btn').click(function () {
+	  (0, _jQuery2.default)('.ev-reg-btn').click(function () {
 	    var username = (0, _jQuery2.default)('.' + _class.username).val();
 	    var pwd = (0, _jQuery2.default)('.' + _class.pwd).val();
+	    var pwdConfirm = (0, _jQuery2.default)('.' + _class.pwdConfirm).val();
 	    var checkCode = (0, _jQuery2.default)('.' + _class.checkCode).val();
 
 	    var r = true;
@@ -95,6 +95,18 @@
 	      return;
 	    }
 
+	    //密码确认
+	    r = Validation.checkNull(pwdConfirm);
+	    if (!r) {
+	      alert('密码确认不能为空!!!');
+	      return;
+	    }
+	    r = Validation.isSame(pwd, pwdConfirm);
+	    if (!r) {
+	      alert('密码和密码确认不相同!!!');
+	      return;
+	    }
+
 	    // 验证码
 	    r = Validation.checkNull(checkCode);
 	    if (!r) {
@@ -103,6 +115,13 @@
 	    }
 
 	    window.location.href = 'index.html';
+	  });
+
+	  (0, _jQuery2.default)('.ev-reset-btn').click(function () {
+	    (0, _jQuery2.default)('.' + _class.username).val('');
+	    (0, _jQuery2.default)('.' + _class.pwd).val('');
+	    (0, _jQuery2.default)('.' + _class.pwdConfirm).val('');
+	    (0, _jQuery2.default)('.' + _class.checkCode).val('');
 	  });
 	}
 
@@ -10750,12 +10769,6 @@
 	module.exports = validation;
 	//   window.Validation = validation;
 	// })(jQuery);
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	module.exports = "\n  <div class=\"login-box\">\n    <ul class=\"login-list\">\n      <li>\n        <label for=\"\">用户名</label>\n        <input type=\"text\" class=\"ev-username\" name=\"username\" value=\"\" />\n      </li>\n      <li>\n        <label for=\"\">密码</label>\n        <input type=\"text\" class=\"ev-pwd\" name=\"pwd\" value=\"\" />\n      </li>\n      <li>\n        <label for=\"\">验证码</label>\n        <input type=\"text\" class=\"ev-check-code\" name=\"checkCode\" value=\"\" />\n      </li>\n    </ul>\n    <div class=\"login-tips-box\">\n      还没有帐号，去<a href=\"./register.html\">注册</a>!\n    </div>\n    <div class=\"login-btn-box\">\n      <button type=\"button\" class=\"ev-login-btn\">登陆</button>\n    </div>\n  </div>\n";
 
 /***/ }
 /******/ ]);

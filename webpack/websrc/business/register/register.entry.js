@@ -1,4 +1,5 @@
 
+
 require('../../common/css/normalize.css');
 require('../../common/css/common.css');
 require('../../common/css/fonts/iconfont.css');
@@ -11,6 +12,7 @@ var Validation = require('../../common/js/validation.js');
 var _class = {
   username: 'ev-username',
   pwd: 'ev-pwd',
+  pwdConfirm: 'ev-pwd-confirm',
   checkCode: 'ev-check-code'
 }
 
@@ -21,9 +23,10 @@ function init(){
 }
 
 function initEvent(){
-  $('.ev-login-btn').click(function(){
+  $('.ev-reg-btn').click(function(){
     var username = $('.' + _class.username).val();
     var pwd = $('.' + _class.pwd).val();
+    var pwdConfirm = $('.' + _class.pwdConfirm).val();
     var checkCode = $('.' + _class.checkCode).val();
 
     var r = true;
@@ -44,6 +47,18 @@ function initEvent(){
       return ;
     }
 
+    //密码确认
+    r = Validation.checkNull(pwdConfirm);
+    if(!r){
+      alert('密码确认不能为空!!!');
+      return;
+    }
+    r = Validation.isSame(pwd, pwdConfirm);
+    if(!r){
+      alert('密码和密码确认不相同!!!');
+      return;
+    }
+
     // 验证码
     r = Validation.checkNull(checkCode);
     if(!r){
@@ -55,6 +70,12 @@ function initEvent(){
 
   });
 
+  $('.ev-reset-btn').click(function(){
+    $('.' + _class.username).val('');
+    $('.' + _class.pwd).val('');
+    $('.' + _class.pwdConfirm).val('');
+    $('.' + _class.checkCode).val('');
+  });
 }
 
 
