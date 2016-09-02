@@ -2,14 +2,22 @@
 //插件
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-var port = 8080,
-    entryPrefix = 'webpack-dev-server/client?http://localhost:' + port;
+const OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
 
+console.log('process.env.BUILD_DEV: %s \r\n', JSON.stringify(process.env)); //.BUILD_DEV
+console.log('process.env.BUILD_PRERELEASE: %s \r\n', process.env.BUILD_PRERELEASE);
 //
-var WebpackDevServer = require('webpack-dev-server');
+// var WebpackDevServer = require('webpack-dev-server');
 var path = require('path');
+var fs = require('fs');
+var Q = require('q');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var deepcopy = require('deepcopy');
+
+var _port = 9527;
+// var devServerOption = {
+//   url: 'webpack-dev-server/client?http://localhost:' + _port
+// };
 
 //webpack的通用配置信息
 var webpackOption = {
@@ -56,14 +64,27 @@ var webpackOption = {
     ]
   },
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress:{
-    //     warnings: false
-    //   },
-    //   output: {
-    //     comments: false
+    // new HtmlWebpackPlugin(
+    //   {
+    //     filename: '../dist/business/index.html',
+    //     template: './common/template.html',
+    //     inject: true,
+    //     hash: true,
+    //     minify: {
+    //       removeComments: false,
+    //       collapseWhitespace: false
+    //     }
     //   }
-    // })
+    // )
+    new webpack.optimize.UglifyJsPlugin({
+      compress:{
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    })
+
   ]
 };
 
@@ -81,7 +102,6 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   var htmlFilename = '';
   for(var key in item){
     htmlFilename = key;
-    // entryOption[key] = entryPrefix + entryOption[key];
   }
   var HtmlWebpackPluginOptin = {
       filename: '../dist/business/' + htmlFilename + '.html',
@@ -97,10 +117,21 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   var wbp = deepcopy(webpackOption);
   // var wbp = util._extend({}, webpackOption);
   wbp.entry = entryOption;
+  if(htmlFilename){
+    // wbp.entry[htmlFilename].unshift(devServerOption.url);
+    // console.log('wbp.entry[htmlFilename]:', wbp.entry[htmlFilename]);
+  }
+  // console.log('HtmlWebpackPluginOptin', HtmlWebpackPluginOptin);
   wbp.plugins.push(new HtmlWebpackPlugin(HtmlWebpackPluginOptin));
-
+  //最后一个加入自动打开浏览器功能
+  if(i == len - 1){
+    wbp.plugins.push(new OpenBrowserWebpackPlugin({url: 'http://localhost:' + _port}));
+  }
+  // console.log('wbp', wbp);
 
   webpackOptions.push(wbp);
+
+
 }
 // console.log(webpackOptions);
 

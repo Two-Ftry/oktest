@@ -21,7 +21,9 @@ var getAllFiles = function(filepath, filter, exclude){
       if(filename.indexOf(filter) != -1){
         var key = filename.split(filter)[0];
         var obj = {};
-        obj[key] = path.resolve(filepath, filename);
+        // obj[key] = path.resolve(filepath, filename);
+        obj[key] = [];
+        obj[key].push(path.resolve(filepath, filename));
         result.push(obj);
       }
     }else{
