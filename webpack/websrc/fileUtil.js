@@ -19,7 +19,17 @@ var getAllFiles = function(filepath, filter, exclude){
     var stat = fs.statSync(p);
     if(!stat.isDirectory()){
       if(filename.indexOf(filter) != -1){
-        var key = filename.split(filter)[0];
+        // var key = filename.split(filter)[0];
+        // var keySourceString = path.resolve(filepath, filename);
+        var keySourceString = path.resolve(filepath);
+        var key = keySourceString.split('websrc')[1];
+        if(!key){
+          return;
+        }
+        // key = key.split(filter)[0];
+        // if(!key){
+        //   return;
+        // }
         var obj = {};
         // obj[key] = path.resolve(filepath, filename);
         obj[key] = [];

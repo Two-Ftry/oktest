@@ -3,9 +3,9 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-console.log('process.env.BUILD_DEV: %s \r\n', JSON.stringify(process.env)); //.BUILD_DEV
-console.log('process.env.BUILD_PRERELEASE: %s \r\n', process.env.BUILD_PRERELEASE);
 //
 // var WebpackDevServer = require('webpack-dev-server');
 var path = require('path');
@@ -15,9 +15,6 @@ var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var deepcopy = require('deepcopy');
 
 var _port = 9527;
-// var devServerOption = {
-//   url: 'webpack-dev-server/client?http://localhost:' + _port
-// };
 
 //webpack的通用配置信息
 var webpackOption = {
@@ -31,8 +28,8 @@ var webpackOption = {
   },
   output: {
       path: '../dist/',
-      // publicPath: '/dist/' //生成的文件中url href等的寻址地址
-      filename: 'business/[name].bundle.js',
+      // publicPath: path.resolve(__dirname, '/'), //生成的文件中url href等的寻址地址
+      filename: '[name]-[hash].bundle.js',
       chunkFilename: '[id].bundle.js'
   },
   module:{
@@ -46,10 +43,14 @@ var webpackOption = {
         test: /\.css$/,
         loader: 'style!css'
       },
-      {
-        test: /\.(jpg|png|gif)$/,
+      // {
+      //   test: /\.(jpg|jpeg|png|gif)$/,
+      //   exclude: nodeModulesPath,
+      //   loader: 'url-loader'
+      // },
+      { test: /\.(jpg|jpeg|png|gif)$/,
         exclude: nodeModulesPath,
-        loader: 'url-loader'
+        loader: "file-loader?name=/[path][name]-[hash:8].[ext]"
       },
       {
         test: /\.(eot|svg|ttf|woff)/,
@@ -95,7 +96,15 @@ var webpackOptions = [];
 var getAllFiles = require('./fileUtil.js');
 var p = path.resolve(__dirname);
 var entryFiles = getAllFiles(p, '.entry.js', 'node_modules');
-// console.log('entryFiles', entryFiles);
+console.log('entryFiles: ', entryFiles, '\r\n');
+var isDev = false;
+for(var i = 0, len = process.argv.length; i < len; i++){
+  var item = process.argv[i];
+  if(item.indexOf('webpack-dev-server') != -1){
+    isDev = true;
+    break;
+  }
+}
 for(var i = 0, len = entryFiles.length; i < len; i++){
   var item = entryFiles[i];
   var entryOption = item;
@@ -103,8 +112,13 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   for(var key in item){
     htmlFilename = key;
   }
+  // var htmlFilenames = htmlFilename.split('/');
+  // htmlFilename = '';
+  // for(var j = 0, jlen = htmlFilenames.length; j < jlen - 1; j++){
+  //   htmlFilename += htmlFilenames[j] + '/';
+  // }
   var HtmlWebpackPluginOptin = {
-      filename: '../dist/business/' + htmlFilename + '.html',
+      filename: '../dist' + htmlFilename + '.html',
       template: './common/template.html',
       inject: true,
       hash: true,
@@ -113,27 +127,32 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
         collapseWhitespace: false
       }
     };
-  // var wbp = Object.assign({}, webpackOption);
   var wbp = deepcopy(webpackOption);
-  // var wbp = util._extend({}, webpackOption);
   wbp.entry = entryOption;
   if(htmlFilename){
     // wbp.entry[htmlFilename].unshift(devServerOption.url);
-    // console.log('wbp.entry[htmlFilename]:', wbp.entry[htmlFilename]);
   }
-  // console.log('HtmlWebpackPluginOptin', HtmlWebpackPluginOptin);
   wbp.plugins.push(new HtmlWebpackPlugin(HtmlWebpackPluginOptin));
+  //第一个清空dist文件夹
+  if(i == 0 && !isDev){
+    wbp.plugins.push(new CleanWebpackPlugin(['dist'],{
+      root: path.resolve(__dirname, '../'),
+      verbose: true,
+      dry: false
+    }));
+  }
   //最后一个加入自动打开浏览器功能
   if(i == len - 1){
     wbp.plugins.push(new OpenBrowserWebpackPlugin({url: 'http://localhost:' + _port}));
+    wbp.plugins.push(new CopyWebpackPlugin([
+      {from: path.resolve(__dirname, 'lib'),
+        to: path.resolve(__dirname, '../dist/lib')}
+    ]));
   }
-  // console.log('wbp', wbp);
 
   webpackOptions.push(wbp);
 
-
 }
-// console.log(webpackOptions);
 
 
 

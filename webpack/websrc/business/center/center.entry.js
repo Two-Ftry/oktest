@@ -69,6 +69,7 @@ function initEvent(){
 
 $(function(){
   init();
-
+  var html = '<img class="b-img ev-center-img ev-b-img" src="' + require('../../images/下载.png') + '" alt="" />';
+  $('body').append(html);
 
 });
