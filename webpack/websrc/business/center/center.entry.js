@@ -1,8 +1,8 @@
 
-require('../../css/normalize.css');
-require('../../css/common.css');
-require('../../css/index.css');
-require('../../css/fonts/iconfont.css');
+require('../../common/css/normalize.css');
+require('../../common/css/common.css');
+require('../../common/css/fonts/iconfont.css');
+require('./style.css');
 
 import $ from 'jQuery';
 

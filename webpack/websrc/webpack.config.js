@@ -27,7 +27,7 @@ var webpackOption = {
     extentions: ['', '.css', '.js'] //当require找不到时添加这些后缀
   },
   output: {
-      path: '../dist/',
+      path: path.resolve(__dirname, '../dist'),
       // publicPath: path.resolve(__dirname, '/'), //生成的文件中url href等的寻址地址
       filename: '[name]-[hash].bundle.js',
       chunkFilename: '[id].bundle.js'
@@ -77,14 +77,14 @@ var webpackOption = {
     //     }
     //   }
     // )
-    new webpack.optimize.UglifyJsPlugin({
-      compress:{
-        warnings: false
-      },
-      output: {
-        comments: false
-      }
-    })
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress:{
+    //     warnings: false
+    //   },
+    //   output: {
+    //     comments: false
+    //   }
+    // })
 
   ]
 };

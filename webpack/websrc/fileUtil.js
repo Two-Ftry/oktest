@@ -22,6 +22,11 @@ var getAllFiles = function(filepath, filter, exclude){
         // var key = filename.split(filter)[0];
         // var keySourceString = path.resolve(filepath, filename);
         var keySourceString = path.resolve(filepath);
+        if(keySourceString.indexOf('\\')  != -1){//window \\ mac linux /
+          keySourceString = keySourceString.replace(new RegExp('\\\\', 'gm'), '/');
+          // keySourceString = keySourceString.replaceAll('\\', '/');
+          console.log('keySourceString:', keySourceString);
+        }
         var key = keySourceString.split('websrc')[1];
         if(!key){
           return;
