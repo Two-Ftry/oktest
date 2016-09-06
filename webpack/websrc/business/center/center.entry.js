@@ -1,7 +1,7 @@
 
-require('../../common/css/normalize.css');
-require('../../common/css/common.css');
-require('../../common/css/fonts/iconfont.css');
+// require('../../css/normalize.css');
+// require('../../css/common.css');
+// require('../../css/fonts/iconfont.css');
 require('./style.css');
 
 import $ from 'jQuery';
@@ -69,7 +69,6 @@ function initEvent(){
 
 $(function(){
   init();
-  var html = '<img class="b-img ev-center-img ev-b-img" src="' + require('../../images/下载.png') + '" alt="" />';
-  $('body').append(html);
+
 
 });

@@ -77,14 +77,14 @@ var webpackOption = {
     //     }
     //   }
     // )
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress:{
-    //     warnings: false
-    //   },
-    //   output: {
-    //     comments: false
-    //   }
-    // })
+    new webpack.optimize.UglifyJsPlugin({
+      compress:{
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    })
 
   ]
 };
@@ -146,7 +146,9 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
     wbp.plugins.push(new OpenBrowserWebpackPlugin({url: 'http://localhost:' + _port}));
     wbp.plugins.push(new CopyWebpackPlugin([
       {from: path.resolve(__dirname, 'lib'),
-        to: path.resolve(__dirname, '../dist/lib')}
+        to: path.resolve(__dirname, '../dist/lib')},
+        {from: path.resolve(__dirname, 'assets'),
+          to: path.resolve(__dirname, '../dist/assets')}
     ]));
   }
 
