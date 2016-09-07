@@ -1,0 +1,11 @@
+/bin
+/build
+.idea
+.bak
+.swp
+desktop.ini
+node_modules
+dst*
+dist*
+*.log
+web.config

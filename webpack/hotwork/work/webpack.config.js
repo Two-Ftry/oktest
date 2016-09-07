@@ -8,17 +8,18 @@ const OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
 var path = require('path');
 var deepcopy = require('deepcopy');
 var argv = require('yargs').argv;
-// var env = argv.env;
-var env = require('./env/' + argv.env);
-console.log('env: ', env, '\r\n');
-env.__ENTRIES__ = [];
+var env = argv.env;
+var __ENV_DEVELOP__ = false;
+if(env == 'develop'){
+  __ENV_DEVELOP__ = true;
+}
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
-var _port = '9527';
+var _port = '8080';
 
 var outputFilename = '',
     destinationPath = '';
-if(env.__DEBUG__){
+if(__ENV_DEVELOP__){
   outputFilename = '[name].bundle.js';
   destinationPath = './';
 }else{
@@ -66,18 +67,14 @@ var webpackConfig = {
 };
 
 //chrome 调试使用
-if(env.__DEBUG__){
+if(__ENV_DEVELOP__){
   webpackConfig.devtool = 'source-map';
 }
 
 var getAllFiles = require('./fileUtil.js');
 var entryFiles = getAllFiles(path.resolve(__dirname), '.entry.js', 'node_modules');
-if(env.__DEBUG__){
-  entryFiles.unshift({"index": path.resolve(__dirname, './business/index.js')});
-}
+entryFiles.unshift({"index": path.resolve(__dirname, './business/index.js')});
 // console.log('entryFiles', entryFiles, '\r\n');
-env.__ENTRIES__ = entryFiles;
-console.log('env2: ', env, '\r\n');
 
 var webpackConfigArray = [];
 
@@ -115,7 +112,7 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   }
 
   //第一个清空dist文件夹
-  if(i == 0 && !env.__DEBUG__){
+  if(i == 0 && !__ENV_DEVELOP__){
     config.plugins.push(new CleanWebpackPlugin(['dist'],{
       root: path.resolve(__dirname, '../'),
       verbose: true,
@@ -125,10 +122,10 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
 
   //最后一个加入自动打开浏览器功能
   if(i == len - 1){
-    if(env.__DEBUG__){
+    if(__ENV_DEVELOP__){
       config.plugins.push(new OpenBrowserWebpackPlugin({url: 'http://localhost:' + _port}));
     }
-    if(!env.__DEBUG__){
+    if(!__ENV_DEVELOP__){
       config.plugins.push(new CopyWebpackPlugin([
         {from: path.resolve(__dirname, 'lib'),
           to: path.resolve(__dirname, destinationPath + 'lib')},
@@ -136,9 +133,6 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
             to: path.resolve(__dirname, destinationPath + 'assets')}
       ]));
     }
-    config.plugins.push(new webpack.ProvidePlugin({
-      env: env
-    }));
   }
 
   webpackConfigArray.push(config);
