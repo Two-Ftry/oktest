@@ -1,9 +1,17 @@
 
 // require('./style.css');
 // import $ from 'jQuery';
+//
+// console.log('__ENTRIES__', __ENTRIES__);
+console.log('__ENTRIES__', __ENTRIES__);
 
-// console.log('__ENTRIES__', env.__ENTRIES__);
-
-$('body').append('<a href="business/center.html">business/center</a><br/>');
-$('body').append('<a href="business/login.html">business/login</a><br/>');
-$('body').append('<a href="business/register.html">business/register</a><br/>');
+$(function(){
+  for(var i = 0, len = __ENTRIES__.length; i < len; i++){
+    var item = __ENTRIES__[i];
+    for(var key in item){
+      if(key.indexOf('index') == -1){
+        $('body').append('<a href="' + key + '.html">' + key + '</a><br/>');
+      }
+    }
+  }
+});

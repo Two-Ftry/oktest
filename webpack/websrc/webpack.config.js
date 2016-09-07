@@ -76,7 +76,7 @@ if(env.__DEBUG__){
   entryFiles.unshift({"index": path.resolve(__dirname, './business/index.js')});
 }
 // console.log('entryFiles', entryFiles, '\r\n');
-env.__ENTRIES__ = entryFiles;
+env.__ENTRIES__ = JSON.stringify(entryFiles);
 console.log('env2: ', env, '\r\n');
 
 var webpackConfigArray = [];
@@ -136,10 +136,12 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
             to: path.resolve(__dirname, destinationPath + 'assets')}
       ]));
     }
-    config.plugins.push(new webpack.ProvidePlugin({
-      env: env
-    }));
+    // config.plugins.push(new webpack.ProvidePlugin({
+    //   env: env
+    // }));
   }
+  config.plugins.push(new webpack.DefinePlugin(env));
+
 
   webpackConfigArray.push(config);
 }

@@ -27,7 +27,7 @@ var getAllFiles = function(filepath, filter, exclude){
           // keySourceString = keySourceString.replaceAll('\\', '/');
           console.log('keySourceString:', keySourceString);
         }
-        var key = keySourceString.split('websrc')[1];
+        var key = keySourceString.split('websrc/')[1];
         if(!key){
           return;
         }
