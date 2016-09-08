@@ -1,10 +1,5 @@
 
-// require('../../css/normalize.css');
-// require('../../css/common.css');
-// require('../../css/fonts/iconfont.css');
-require('./style.css');
-
-import $ from 'jQuery';
+require('./style');
 
 var _class = {
   iconBox: 'ev-icon-box',

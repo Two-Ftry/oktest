@@ -4,13 +4,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const OpenBrowserWebpackPlugin = require('open-browser-webpack-plugin');
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+var autoprefixer = require('autoprefixer');
 
 var path = require('path');
 var deepcopy = require('deepcopy');
+
+//读取命令行中启动的参数
 var argv = require('yargs').argv;
 // var env = argv.env;
-var env = require('./env/' + argv.env);
-console.log('env: ', env, '\r\n');
+var env = require('./env/' + argv.env);//根据命令行参数 --env 读取配置文件
 env.__ENTRIES__ = [];
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
@@ -29,9 +32,14 @@ if(env.__DEBUG__){
 var webpackConfig = {
   output: {
     path: destinationPath,
-    filename: outputFilename
+    filename: outputFilename,
+    publicPath: env.__BASE_DIR__
   },
   cache: true,
+  resolve: {
+    root: path.resolve('./'),
+    extensions: ['', '.js', '.css', '.scss', '.sass', '.less']
+  },
   module:{
     loaders: [
       {
@@ -42,7 +50,14 @@ var webpackConfig = {
       {
         test: /\.css$/,
         exclude: nodeModulesPath,
-        loader: 'style-loader!css-loader'
+        // loader: 'style-loader!css-loader'
+        loader: ExtractTextWebpackPlugin.extract('style-loader', 'css-loader')
+      },
+      {
+        test: /\.(scss|sass)$/,
+        exclude: nodeModulesPath,
+        // loader: 'style-loader!css-loader!sass-loader'
+        loader: ExtractTextWebpackPlugin.extract('style-loader', 'css-loader!sass-loader')
       },
       {
         test: /\.html$/,
@@ -62,7 +77,12 @@ var webpackConfig = {
       }
     ]
   },
-  plugins: []
+  postcss: [
+    autoprefixer({browsers:['last 2 versions']})
+  ],
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin('all.js')
+  ]
 };
 
 //chrome 调试使用
@@ -75,9 +95,7 @@ var entryFiles = getAllFiles(path.resolve(__dirname), '.entry.js', 'node_modules
 if(env.__DEBUG__){
   entryFiles.unshift({"index": path.resolve(__dirname, './business/index.js')});
 }
-// console.log('entryFiles', entryFiles, '\r\n');
 env.__ENTRIES__ = JSON.stringify(entryFiles);
-console.log('env2: ', env, '\r\n');
 
 var webpackConfigArray = [];
 
@@ -100,7 +118,8 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   //plugins
   config.plugins.push(new HtmlWebpackPlugin({
     filename: destinationPath + htmlFilename + '.html',
-    template: './common/template.html',
+    template: './common/template.ejs',
+    // baseDir: env.__BASE_DIR__,
     inject: true,
     hash: true,
     minify: {
@@ -112,6 +131,12 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   //对index的输出做特殊处理(index带有hash值会导致无法热更新)
   if(htmlFilename.indexOf('index') != -1){
     config.output.filename = '[name].bundle.js';
+  }
+
+  if(env.__DEBUG__){
+    config.plugins.push(new ExtractTextWebpackPlugin('[name].css'));
+  }else{
+    config.plugins.push(new ExtractTextWebpackPlugin('[name]-[contenthash:6].css'));
   }
 
   //第一个清空dist文件夹
@@ -132,16 +157,12 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
       config.plugins.push(new CopyWebpackPlugin([
         {from: path.resolve(__dirname, 'lib'),
           to: path.resolve(__dirname, destinationPath + 'lib')},
-          {from: path.resolve(__dirname, 'assets'),
-            to: path.resolve(__dirname, destinationPath + 'assets')}
+        {from: path.resolve(__dirname, 'assets'),
+          to: path.resolve(__dirname, destinationPath + 'assets')}
       ]));
     }
-    // config.plugins.push(new webpack.ProvidePlugin({
-    //   env: env
-    // }));
   }
   config.plugins.push(new webpack.DefinePlugin(env));
-
 
   webpackConfigArray.push(config);
 }

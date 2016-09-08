@@ -1,3 +1,5 @@
+$color1: yellow;
+
 .index-top{
   padding: 0 20px;
   height: 40px;
@@ -43,4 +45,24 @@
 }
 .index-mt{
   margin-top: 20px;
+}
+.c-box{
+  color: $color1;
+  .c-item1{
+    display: block;
+    font-size: 24px;
+    color: green;
+  }
+  .c-item2{
+    font-size: 38px;
+  }
+  .c-item3{
+    font-size: 48px;
+  }
+  .c-item4{
+    font-size: 48px;
+  }
+  .c-item5{
+    font-size: 48px;
+  }
 }

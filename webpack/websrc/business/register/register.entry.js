@@ -1,20 +1,21 @@
 
 
-require('../../common/css/normalize.css');
-require('../../common/css/common.css');
-require('../../common/css/fonts/iconfont.css');
+// require('../../common/css/normalize.css');
+// require('../../common/css/common.css');
+// require('../../common/css/fonts/iconfont.css');
 require('./style.css');
 
 import $ from 'jQuery';
 
-var Validation = require('../../common/js/validation.js');
+var Validation = require('../../common/js/common.js');
+require('../../common/js/validation.js');
 
 var _class = {
   username: 'ev-username',
   pwd: 'ev-pwd',
   pwdConfirm: 'ev-pwd-confirm',
   checkCode: 'ev-check-code'
-}
+};
 
 function init(){
   var dom = require('./template.html');
