@@ -15,6 +15,7 @@ var argv = require('yargs').argv;
 // var env = argv.env;
 var env = require('./env/' + argv.env);//根据命令行参数 --env 读取配置文件
 env.__ENTRIES__ = [];
+console.log('env.__BASE_DIR__:', env.__BASE_DIR__);
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var _port = '9527';
@@ -33,7 +34,8 @@ var webpackConfig = {
   output: {
     path: destinationPath,
     filename: outputFilename,
-    publicPath: env.__BASE_DIR__
+    publicPath: env.__BASE_DIR__.replace(/"/g, '')
+    // env.__BASE_DIR.replace(/"/g, ''),
   },
   cache: true,
   resolve: {
@@ -67,13 +69,19 @@ var webpackConfig = {
       {
         test: /\.(jpg|jpeg|png|gif)$/,
         exclude: nodeModulesPath,
-        loader: 'file-loader?name=/[path][name]-[hash:6].[ext]'
+        loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
       },
       {
         test: /\.(eot|svg|ttf|woff)/,
         exclude: nodeModulesPath,
         // loader: 'url-loader'
-        loader: 'file-loader?name=/[path][name]-[hash:6].[ext]'
+        loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
+      },
+      {
+        test: /\.htc$/,
+        exclude: nodeModulesPath,
+        // loader: 'url-loader'
+        loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
       }
     ]
   },
@@ -119,7 +127,7 @@ for(var i = 0, len = entryFiles.length; i < len; i++){
   config.plugins.push(new HtmlWebpackPlugin({
     filename: destinationPath + htmlFilename + '.html',
     template: './common/template.ejs',
-    // baseDir: env.__BASE_DIR__,
+    baseDir: env.__BASE_DIR__.replace(/"/g, ''),
     inject: true,
     hash: true,
     minify: {

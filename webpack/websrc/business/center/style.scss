@@ -1,3 +1,4 @@
+@import "../../common/css/border";
 $color1: yellow;
 
 .index-top{
@@ -36,12 +37,14 @@ $color1: yellow;
   margin-right: 15px;
   overflow: hidden;
   border: 1px solid yellow;
-  border-radius: 50%;
+  background: url('../../images/bf1554.jpg') top left no-repeat;
+  // border-radius: 50%;
+  @include border-radius(50%);
 }
-.tx img{
+.tx img, .avart-img{
   width: 40px;
   height: 40px;
-
+  @include border-radius(50%);
 }
 .index-mt{
   margin-top: 20px;

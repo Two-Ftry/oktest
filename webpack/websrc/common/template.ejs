@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>title</title>
-  <link rel="stylesheet" href="<% htmlWebpackPlugin.options.baseDir %>/assets/normalize.css"  charset="utf-8" />
-  <link rel="stylesheet" href="<% htmlWebpackPlugin.options.baseDir %>/assets/common.css"  charset="utf-8" />
-  <link rel="stylesheet" href="<% htmlWebpackPlugin.options.baseDir %>/assets/fonts/iconfont.css"  charset="utf-8" />
+  <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.baseDir %>assets/normalize.css"  charset="utf-8" />
+  <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.baseDir %>assets/common.css"  charset="utf-8" />
+  <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.baseDir %>assets/fonts/iconfont.css"  charset="utf-8" />
+  <script type="text/javascript" src="<%= htmlWebpackPlugin.options.baseDir %>lib/jquery-1.9.1.js"></script>
+  <script type="text/javascript" src="<%= htmlWebpackPlugin.options.baseDir %>lib/polyfill.min.js"></script>
 </head>
 <body>
   <div id="main"></div>
-  <script type="text/javascript" src="<% htmlWebpackPlugin.options.baseDir %>/lib/jquery-1.9.1.js"></script>
 </body>
 </html>
