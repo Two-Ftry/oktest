@@ -76,18 +76,20 @@ var webpackConfig = {
         exclude: nodeModulesPath,
         // loader: 'url-loader'
         loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
-      },
-      {
-        test: /\.htc$/,
-        exclude: nodeModulesPath,
-        // loader: 'url-loader'
-        loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
       }
+      // ,
+      // {//不起作用 TODO 自写pie.htc-loader
+      //   test: /\.htc$/,
+      //   exclude: nodeModulesPath,
+      //   // loader: 'url-loader'
+      //   loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
+      // }
     ]
   },
   postcss: [
     autoprefixer({browsers:['last 2 versions']})
   ],
+  // sass
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('all.js')
   ]

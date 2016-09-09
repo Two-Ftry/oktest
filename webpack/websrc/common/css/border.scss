@@ -4,6 +4,6 @@
   -ms-border-radius: $radius;
   -webkit-border-radius: $radius;
   border-radius: $radius;
-  behavior: url('/lib/border-radius.htc');
+  behavior: url('./border-radius.htc');
 }
 //@include border-radius(4px)
