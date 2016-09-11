@@ -25,7 +25,7 @@ var getAllFiles = function(filepath, filter, exclude){
         if(keySourceString.indexOf('\\')  != -1){//window \\ mac linux /
           keySourceString = keySourceString.replace(new RegExp('\\\\', 'gm'), '/');
           // keySourceString = keySourceString.replaceAll('\\', '/');
-          console.log('keySourceString:', keySourceString);
+          // console.log('keySourceString:', keySourceString);
         }
         var key = keySourceString.split('websrc/')[1];
         if(!key){

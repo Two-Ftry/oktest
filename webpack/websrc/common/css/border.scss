@@ -1,9 +1,15 @@
 
+// $borderColor: black;
+// $envPath: '/';
+
 @mixin border-radius($radius){
   -moz-border-radius: $radius;
   -ms-border-radius: $radius;
   -webkit-border-radius: $radius;
   border-radius: $radius;
-  behavior: url('./border-radius.htc');
+  behavior: url($envPath + 'border-radius.htc');
 }
+// @mixin test-data(){
+//   border: 3px solid $borderColor;
+// }
 //@include border-radius(4px)

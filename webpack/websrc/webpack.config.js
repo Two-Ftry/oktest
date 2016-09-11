@@ -15,20 +15,28 @@ var argv = require('yargs').argv;
 // var env = argv.env;
 var env = require('./env/' + argv.env);//根据命令行参数 --env 读取配置文件
 env.__ENTRIES__ = [];
-console.log('env.__BASE_DIR__:', env.__BASE_DIR__);
+// console.log('env.__BASE_DIR__:', env.__BASE_DIR__);
 
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var _port = '9527';
 
 var outputFilename = '',
-    destinationPath = '';
+    destinationPath = '',
+    cssLoaderStr = '',
+    sassLoaderStr = '';
 if(env.__DEBUG__){
   outputFilename = '[name].bundle.js';
   destinationPath = './';
+  cssLoaderStr = 'css-loader?sourceMap';
+  sassLoaderStr = 'sass-loader?sourceMap';
 }else{
   outputFilename = '[name]-[hash:6].bundle.js';//-[hash]-[hash:6]
   destinationPath = '../dist/';
+  cssLoaderStr = 'css-loader';
+  sassLoaderStr = 'sass-loader';
 }
+
+console.log('$envPath:', '$envPath:' +　env.__BASE_DIR__ + ';');
 
 var webpackConfig = {
   output: {
@@ -53,13 +61,13 @@ var webpackConfig = {
         test: /\.css$/,
         exclude: nodeModulesPath,
         // loader: 'style-loader!css-loader'
-        loader: ExtractTextWebpackPlugin.extract('style-loader', 'css-loader')
+        loader: ExtractTextWebpackPlugin.extract('style-loader', cssLoaderStr)
       },
       {
         test: /\.(scss|sass)$/,
         exclude: nodeModulesPath,
         // loader: 'style-loader!css-loader!sass-loader'
-        loader: ExtractTextWebpackPlugin.extract('style-loader', 'css-loader!sass-loader')
+        loader: ExtractTextWebpackPlugin.extract('style-loader', cssLoaderStr + '!' + sassLoaderStr)
       },
       {
         test: /\.html$/,
@@ -85,6 +93,9 @@ var webpackConfig = {
       //   loader: 'file-loader?name=[path][name]-[hash:6].[ext]'
       // }
     ]
+  },
+  sassLoader:{
+    data:'$envPath:' +　env.__BASE_DIR__ + ';'
   },
   postcss: [
     autoprefixer({browsers:['last 2 versions']})
