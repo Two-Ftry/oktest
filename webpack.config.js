@@ -13,6 +13,9 @@ var config = {
     loaders: [
     ]
   },
+  devServer:{
+    inline: true
+  },
   pulgins: [
   ]
 };
